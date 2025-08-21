@@ -1,0 +1,5 @@
+﻿node_modules/
+.env
+prisma/dev.db
+.DS_Store
+frontend/assets/CV.pdf
