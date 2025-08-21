@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mert Topaçoğlu– </title>
+
+  <link rel="icon" href="./assets/favicon.ico" />
+  <!-- Rock/Piyano fontları -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+
+  <meta name="description" content="Rock/piyano estetiğinde kişisel portfolyo: projeler, CV, iletişim." />
+  <meta name="theme-color" content="#000000" />
+  <meta property="og:title" content="Ad Soyad – Kişisel Site" />
+  <meta property="og:description" content="Modern, yüksek kontrastlı siyah-beyaz portfolyo." />
+  <meta property="og:type" content="website" />
+
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="container nav-row">
+      <a href="#home" class="brand">
+        <span class="brand-square"></span>
+        <span>Mert Topaçoğlu</span>
+      </a>
+      <nav class="nav-links" id="top-nav">
+        <a href="#contact" data-section="contact" class="link-underline">İletişim</a>
+        <a href="#cv" data-section="cv" class="link-underline">CV</a>
+        <a href="#hobbies" data-section="hobbies" class="link-underline">Hobiler</a>
+        <a href="https://github.com/kullanici" target="_blank" class="mono link-underline">GitHub</a>
+        <a href="https://www.linkedin.com/in/kullanici" target="_blank" class="mono link-underline">LinkedIn</a>
+      </nav>
+      <button id="theme-toggle" aria-label="Tema Değiştir">☾</button>
+    </div>
+  </header>
+
+  <!-- ANA İÇERİK -->
+  <main id="home" class="main">
+    <!-- Piyano arka plan -->
+    <div class="piano-bg" aria-hidden="true"></div>
+
+    <div class="container space">
+      <div class="intro">
+        <h1 class="display">Siyah & Beyaz • Net • Gür</h1>
+        <p>Bireysel Websitem</p>
+      </div>
+
+      <section class="grid-two">
+        <!-- FOTOĞRAF KARTI (altıgen kesim) -->
+        <div class="card photo-card">
+          <div class="photo-hex">
+            <img src="./assets/profile.jpeg" alt="Profil fotoğrafı"
+                 onerror="this.outerHTML='<div class=&quot;photo-fallback&quot;>🎸</div>'" />
+          </div>
+        </div>
+
+        <!-- TANIM KARTI -->
+        <div class="card text-card">
+          <div>
+            <h2 class="display-sm">Ad Soyad</h2>
+            <p class="subtitle">Full-Stack Geliştirici • İstanbul</p>
+            <p class="desc">
+              Minimal, hızlı ve erişilebilir arayüzler. Node.js & PostgreSQL ile güvenilir backend’ler.
+              Performans, erişilebilirlik ve temiz mimari önceliğim.
+            </p>
+          </div>
+          <div class="btn-row">
+            <a class="btn primary" href="#contact">İletişime Geç</a>
+            <!-- temaya göre ters renk -->
+            <button class="btn btn--cv" id="view-cv-btn" type="button">CV Gör</button>
+            <a class="btn" id="cv" href="./assets/CV.pdf" download>CV İndir</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="hobbies" class="section">
+        <h3>Hobiler</h3>
+        <p>Müzik prodüksiyonu, koşu, tenis. (Detayları sonra dolduracağız.)</p>
+      </section>
+
+      <section id="contact" class="section">
+        <h3>İletişim</h3>
+        <form id="contact-form" class="form" novalidate>
+          <input name="name" placeholder="Ad Soyad" required />
+          <input name="email" type="email" placeholder="E-posta" required />
+          <textarea name="message" rows="5" placeholder="Mesaj" required></textarea>
+          <button type="submit" class="btn primary">Gönder</button>
+          <p id="contact-status"></p>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <small>© <span id="year"></span> Ad Soyad</small>
+    </div>
+  </footer>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- CV Modal -->
+  <dialog id="cvModal" class="modal">
+    <div class="modal-body">
+      <button type="button" id="cvClose" class="btn close">✕</button>
+      <iframe src="./assets/CV.pdf" title="CV" class="modal-frame"></iframe>
+    </div>
+  </dialog>
+
+  <!-- Arkaplan canvas'lar -->
+  <canvas id="bg-lines" class="bg-canvas"></canvas>
+  <canvas id="cursor-trail" class="bg-canvas"></canvas>
+
+  <script>
+    /* İstersen canlıda backend adresini buradan set edebilirsin: */
+    // window.__API_BASE__ = "https://api-senin.onrender.com/api";
+  </script>
+  <script src="./app.js"></script>
+</body>
+</html>
