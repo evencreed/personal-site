@@ -8,7 +8,13 @@
       'nav.contact':'İletişim',
 
       'hero.title':'Mert Topaçoğlu',
-      'hero.desc':'Rock / piyano esintili siyah-beyaz palet. Minimal ama canlı. Aşağıdan CV’ye bakabilir, bana mesaj bırakabilirsin.',
+      'hero.desc':'Ben Mert Topaçoğlu(Evencreed). Kod yazmak benim için sadece bir iş değil, aynı zamanda yaratıcılığımı ifade etmenin bir yolu. 
+        Frontend’de HTML, CSS, JavaScript ve React ile modern, kullanıcı dostu arayüzler kurmayı seviyorum. Backend tarafında Node.js, 
+    Express ve Prisma ile güçlü ve esnek uygulamalar geliştiriyorum. Postgres ile veriyi düzenli ve anlamlı hale getirmek benim için ayrı bir keyif.
+
+Yeni teknolojiler öğrenmekten hoşlanıyorum; özellikle TypeScript, Next.js ve GraphQL üzerinde kendimi sürekli geliştirmeye çalışıyorum. 
+    Projelerimi hayata geçirirken Vercel, Render ve Supabase gibi platformlarla fikirlerimi hızla dünyaya açmak bana enerji veriyor. 
+    Kısacası; hem düzeni hem de özgünlüğü önemseyen, yazılımı bir sanat gibi gören biriyim.',
 
       'btn.cv':'CV Gör',
       'btn.contact':'İletişim',
@@ -44,7 +50,13 @@
       'nav.contact':'Contact',
 
       'hero.title':'Hi, I’m {name} 👋',
-      'hero.desc':'Black & white palette with rock/piano vibes. Minimal yet lively. You can check my resume and drop me a message below.',
+      'hero.desc':'I’m Mert Topaçoğlu. For me, coding isn’t just work—it’s a way of expressing creativity.
+        On the frontend, I enjoy building modern, user-friendly interfaces with HTML, CSS, JavaScript, and React. 
+        On the backend, I develop powerful and flexible applications with Node.js, Express, and Prisma. 
+        Working with Postgres and organizing data into something meaningful is always a joy.
+        I love exploring new technologies, especially TypeScript, Next.js, and GraphQL. 
+        Bringing projects to life with platforms like Vercel, Render, and Supabase keeps me motivated and excited. 
+        In short, I value both structure and originality, and I see software development as a form of art.',
 
       'btn.cv':'View Resume',
       'btn.contact':'Contact',
