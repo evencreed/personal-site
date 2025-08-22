@@ -50,7 +50,7 @@ Yeni teknolojiler öğrenmekten hoşlanıyorum; özellikle TypeScript, Next.js v
       'nav.contact':'Contact',
 
       'hero.title':'Hi, I’m {name} 👋',
-      'hero.desc':'I’m Mert Topaçoğlu. For me, coding isn’t just work—it’s a way of expressing creativity.
+      'hero.desc':'I’m Mert Topaçoğlu(Evencreed). For me, coding isn’t just work—it’s a way of expressing creativity.
         On the frontend, I enjoy building modern, user-friendly interfaces with HTML, CSS, JavaScript, and React. 
         On the backend, I develop powerful and flexible applications with Node.js, Express, and Prisma. 
         Working with Postgres and organizing data into something meaningful is always a joy.
