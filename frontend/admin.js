@@ -60,3 +60,24 @@ async function loadMessages() {
     listEl.innerHTML = `<li style="color:red">Hata: ${escapeHtml(err.message)}</li>`;
   }
 }
+
+// ---- Çıkış
+document.getElementById('admin-logout')?.addEventListener('click', () => {
+  localStorage.removeItem('token');
+  alert('Çıkış yapıldı');
+});
+
+// ---- Basit HTML escape helper
+function escapeHtml(s) {
+  return String(s)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
+// Sayfa açıldığında token varsa mesajları yükle
+if (localStorage.getItem('token')) {
+  loadMessages().catch(console.error);
+}
