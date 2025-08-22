@@ -4,11 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Kişisel Site</title>
-  <link rel="stylesheet" href="./styles.css?v=7" />
+  <link rel="stylesheet" href="./styles.css?v=8" />
   <meta name="color-scheme" content="dark light">
 </head>
 <body>
-  <!-- Arkaplan için tek tuval: hem çizgiler hem mouse izi -->
+  <!-- Arkaplan: uçuşan çizgiler + mouse gri izi -->
   <canvas id="bgCanvas" aria-hidden="true"></canvas>
 
   <header class="topbar">
@@ -24,12 +24,18 @@
   </header>
 
   <main class="container" id="home">
-    <!-- Hero kart -->
+    <!-- HERO -->
     <section class="card hero">
-      <img class="avatar" src="./assets/me.jpg" alt="Fotoğrafım" onerror="this.style.display='none'">
-      <div>
+      <div class="hex">
+        <img src="./assets/me.jpg" alt="Fotoğrafım" onerror="this.style.display='none'">
+      </div>
+
+      <div class="hero-copy float">
         <h1>Merhaba, ben <span class="accent">Mert</span> 👋</h1>
-        <p class="muted">Rock/piyano siyah-beyaz paletinde sade bir portföy. Aşağıdan CV’ye göz atabilir ve bana ulaşabilirsin.</p>
+        <p class="muted">
+          Rock / piyano esintili siyah-beyaz palet. Minimal ama canlı.
+          Aşağıdan CV’ye bakabilir, bana mesaj bırakabilirsin.
+        </p>
         <div class="row">
           <a class="btn primary" href="#cv">CV Gör</a>
           <a class="btn" href="#contact">İletişim</a>
@@ -70,7 +76,7 @@
         <label for="message">Mesaj</label>
         <textarea id="message" name="message" rows="5" placeholder="Merhaba..." required></textarea>
 
-        <!-- Honeypot (botları yakalamak için görünmez alan) -->
+        <!-- Honeypot (bot yakalama) -->
         <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true"/>
 
         <div class="row">
@@ -85,13 +91,13 @@
     <small>© <span id="year"></span> evencreed</small>
   </footer>
 
-  <!-- API tabanı: JS'den ÖNCE set et -->
+  <!-- API tabanı: JS'den önce set et -->
   <script>
     // PROD (Render)
     window.__API_BASE__ = "https://evencreed.onrender.com/api";
     // Lokal geliştirirken üst satırı yorumlayıp şunu aç:
     // window.__API_BASE__ = "http://localhost:4000/api";
   </script>
-  <script src="./app.js?v=7"></script>
+  <script src="./app.js?v=8"></script>
 </body>
 </html>
