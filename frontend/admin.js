@@ -1,5 +1,19 @@
 const API_BASE = "http://localhost:4000/api";
 const PRODUCTION = true; // canlıda true kalsın
+async function adminLogin(email, password) {
+  const res = await fetch(`${window.__API_BASE__}/auth/login`, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ email, password })
+  });
+  const text = await res.text();       // <- ÖNCE TEXT
+  if (!res.ok) throw new Error(`HTTP ${res.status} - ${text}`);
+  let data;
+  try { data = JSON.parse(text); }
+  catch { throw new Error(`Non-JSON response: ${text.slice(0,200)}`); }
+  localStorage.setItem('token', data.token);
+  return data;
+}
 
 if (PRODUCTION) {
   const seedBtn = document.getElementById("seed-btn");
