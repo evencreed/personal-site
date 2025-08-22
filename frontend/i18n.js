@@ -8,7 +8,7 @@
       'nav.hobbies':'Hobiler',
       'nav.contact':'İletişim',
 
-      'hero.title':'Merhaba, ben {name} 👋',
+      'hero.title':'Mert Topaçoğlu',
       'hero.desc':'Rock / piyano esintili siyah-beyaz palet. Minimal ama canlı. Aşağıdan CV’ye bakabilir, bana mesaj bırakabilirsin.',
 
       'btn.cv':'CV Gör',
