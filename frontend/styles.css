@@ -7,9 +7,10 @@
   --btn:#161616;
   --btn-hover:#1f1f1f;
   --accent:#eaeaea;
-  --line:#ffffff;     /* koyu temada çizgiler beyaz */
-  --trail:#9a9a9a;    /* mouse izi gri */
+  --line:#ffffff;      /* koyu temada çizgiler beyaz */
+  --trail:#9a9a9a;     /* mouse izi gri */
   --shadow:0 10px 26px rgba(0,0,0,.35);
+  --glow: 0 0 0 rgba(255,255,255,0); /* varsayılan kapalı */
 }
 
 html[data-theme="light"]{
@@ -21,9 +22,10 @@ html[data-theme="light"]{
   --btn:#f3f3f3;
   --btn-hover:#eaeaea;
   --accent:#0f0f0f;
-  --line:#000000;     /* açık temada çizgiler siyah */
-  --trail:#8a8a8a;    /* gri iz, koyusu */
+  --line:#000000;      /* açık temada çizgiler siyah */
+  --trail:#8a8a8a;
   --shadow:0 10px 26px rgba(0,0,0,.12);
+  --glow: 0 0 28px rgba(0,0,0,0.14);
 }
 
 *{box-sizing:border-box}
@@ -45,9 +47,8 @@ body{
   display:block;
 }
 
-.topbar{
-  position:sticky; top:0; z-index:3;
-  backdrop-filter: blur(8px);
+/* Üst bar */
+.topbar{ position:sticky; top:0; z-index:3; backdrop-filter: blur(8px);
   background: color-mix(in oklab, var(--bg) 85%, transparent);
   border-bottom:1px solid var(--border);
 }
@@ -60,6 +61,7 @@ body{
 .links a{ color:var(--text); text-decoration:none; opacity:.85 }
 .links a:hover{ opacity:1 }
 
+/* Genel layout */
 .container{ position:relative; z-index:2; max-width:1100px; margin:28px auto 80px; padding:0 16px }
 .card{
   background: color-mix(in oklab, var(--card) 96%, transparent);
@@ -69,16 +71,58 @@ body{
   box-shadow:var(--shadow);
   margin-bottom:16px;
 }
-.hero{ display:grid; grid-template-columns:120px 1fr; gap:16px; align-items:center }
-@media (max-width:720px){ .hero{ grid-template-columns:1fr } }
-.avatar{ width:110px; height:110px; border-radius:50%; object-fit:cover; border:2px solid var(--border); background:var(--btn) }
 
+/* HERO */
+.hero{
+  display:grid; grid-template-columns:160px 1fr; gap:20px; align-items:center;
+}
+@media (max-width:720px){ .hero{ grid-template-columns:1fr } }
+
+/* Altıgen avatar */
+.hex{
+  width:160px;
+  height:calc(160px * 1.1547);           /* yaklaşık yükseklik */
+  position:relative;
+  filter: drop-shadow(0 10px 24px rgba(0,0,0,.35));
+}
+.hex::before{
+  content:"";
+  position:absolute; inset:-8px;
+  background: var(--accent);
+  /* çerçeve için dış altıgen */
+  -webkit-clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0 50%);
+          clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0 50%);
+  z-index:0;
+  opacity:.85;
+  box-shadow: var(--glow);
+}
+.hex img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;
+  -webkit-clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0 50%);
+          clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0 50%);
+  border:1px solid var(--border);
+  background:var(--btn);
+}
+
+/* Yüzen (float) hero metni */
+.hero-copy h1{ font-size:32px; margin:6px 0 8px; animation: floaty 8s ease-in-out infinite; }
+.hero-copy p { animation: floaty2 10s ease-in-out infinite; }
+@keyframes floaty {
+  0%,100% { transform: translateY(0) }
+  50%     { transform: translateY(-6px) }
+}
+@keyframes floaty2 {
+  0%,100% { transform: translateY(0) }
+  50%     { transform: translateY(-3px) }
+}
+
+/* Tipografi */
 h1,h2,h3{ margin:6px 0 10px }
-h1{ font-size:28px }
 h2{ font-size:22px }
 .muted{ color:var(--muted) }
 .accent{ color:var(--accent) }
 
+/* Butonlar */
 .row{ display:flex; gap:10px; flex-wrap:wrap }
 .btn{
   padding:10px 14px; border-radius:12px; border:1px solid var(--border);
@@ -91,6 +135,7 @@ h2{ font-size:22px }
 .btn.primary{ border-color:var(--accent) }
 .btn.ghost{ background:transparent }
 
+/* Formlar */
 label{ display:block; margin:10px 0 6px }
 input,textarea{
   width:100%; padding:10px 12px; border-radius:12px;
@@ -98,10 +143,10 @@ input,textarea{
 }
 input:focus,textarea:focus{ border-color:var(--accent) }
 textarea{ resize:vertical }
-
 .bullets{ margin:6px 0 0 18px }
 .bullets li{ margin:4px 0 }
 
+/* Footer */
 .footer{
   position:relative; z-index:2; border-top:1px solid var(--border);
   padding:24px 16px; text-align:center; color:var(--muted)
