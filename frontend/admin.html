@@ -117,6 +117,21 @@
   <footer class="footer">
     <div class="container"><small>© <span id="year"></span> Admin</small></div>
   </footer>
+  
+ <script>
+  // Prod backend (Render)
+  const PROD_API = "https://evencreed.onrender.com/api";
+  // Lokal geliştirme (istersen)
+  const LOCAL_API = "https://localhost:4000/api";
+
+  // Ortama göre otomatik seç (Vercel domaini veya kendi alan adın prod sayılır)
+  const isProd =
+    location.hostname.endsWith(".vercel.app") ||
+    location.hostname === "https://personal-site-mert-topacoglus-projects.vercel.app" ||      // kendi domainini ekleyebilirsin
+    
+
+  window.__API_BASE__ = isProd ? PROD_API : LOCAL_API;
+</script>
 
   <script src="./admin.js"></script>
 </body>
