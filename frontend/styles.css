@@ -113,6 +113,24 @@ body{
   margin-bottom:16px;
 }
 
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 40px 0;
+}
+
+.social-links a {
+  font-size: 28px;
+  color: var(--text-color);
+  transition: transform 0.2s ease, color 0.3s ease;
+}
+
+.social-links a:hover {
+  transform: scale(1.2);
+  color: var(--accent-color); /* Tema accent rengi (ör: mavi ya da kırmızı) */
+}
+
 /* HERO */
 .hero{
   display:grid; grid-template-columns:240px 1fr; gap:24px; align-items:center;
