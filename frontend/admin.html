@@ -3,127 +3,55 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Admin • Kişisel Site</title>
-  <link rel="stylesheet" href="./styles.css" />
+  <title>Admin Paneli</title>
   <style>
-    .hidden { display: none; }
-    .toolbar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    .table { width: 100%; border-collapse: collapse; }
-    .table th, .table td { border:1px solid var(--border); padding:10px; text-align:left; }
-    .muted { opacity:.7; }
-    .right { text-align:right; }
-    .danger { border-color: #dc2626 !important; color:#dc2626 !important }
-    .success { color: #16a34a; }
-    .warn { color: #ca8a04; }
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    body{font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:720px;margin:40px auto;padding:0 16px;background:#0b0b0b;color:#fff}
+    .card{background:#111;border:1px solid #222;border-radius:12px;padding:16px;margin:16px 0}
+    label{display:block;margin:8px 0 4px}
+    input,button,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #333;background:#0e0e0e;color:#fff}
+    button{cursor:pointer}
+    button:hover{background:#161616}
+    .row{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+    pre{white-space:pre-wrap;word-break:break-word;background:#0e0e0e;border:1px solid #222;border-radius:8px;padding:12px}
+    .ok{color:#8cff9e}.err{color:#ff7b7b}
   </style>
 </head>
 <body>
-  <header class="navbar">
-    <div class="container nav-row">
-      <a href="./index.html" class="brand">
-        <span class="brand-square"></span>
-        <span>Geri • Site</span>
-      </a>
-      <nav class="nav-links">
-        <a href="./admin.html" aria-current="page">Admin</a>
-      </nav>
-      <button id="logout-btn" class="btn">Çıkış</button>
+  <h1>Admin Paneli</h1>
+
+  <!-- Giriş -->
+  <div class="card">
+    <h2>Giriş</h2>
+    <form id="admin-login-form">
+      <label for="email">E-posta</label>
+      <input id="email" name="email" type="email" placeholder="admin@site.com" required />
+
+      <label for="password">Şifre</label>
+      <input id="password" name="password" type="password" placeholder="••••••••" required />
+
+      <button id="login-btn" type="submit">Giriş Yap</button>
+    </form>
+    <p id="admin-status"></p>
+  </div>
+
+  <!-- Hızlı işlemler -->
+  <div class="card">
+    <h2>Mesajlar</h2>
+    <div class="row">
+      <button id="btn-list-messages" type="button">Mesajları Listele</button>
+      <button id="admin-logout" type="button">Çıkış</button>
     </div>
-  </header>
+    <pre id="admin-output">Henüz veri yok.</pre>
+    <ul id="messages-list"></ul>
+  </div>
 
-  <main class="container space">
-    <h1>Admin</h1>
-    <p class="muted">Projeleri yönet, mesajları görüntüle.</p>
-
-    <!-- Giriş Kartı -->
-    <section id="login-card" class="card" style="max-width:560px; margin-top:16px;">
-      <h3>Giriş</h3>
-      <form id="login-form" class="form" autocomplete="off">
-        <input name="email" type="email" placeholder="E-posta" required />
-        <input name="password" type="password" placeholder="Şifre (min 6)" required />
-        <div class="toolbar">
-          <button class="btn primary" type="submit">Giriş Yap</button>
-          <button class="btn warn" id="seed-btn" type="button" title="İlk kurulum için">İlk Admin Oluştur</button>
-        </div>
-        <p id="login-status" class="mono"></p>
-      </form>
-      <small class="muted">Not: “İlk Admin Oluştur” butonu yalnızca ilk kurulum içindir, canlıda kaldır.</small>
-    </section>
-
-    <!-- Panel -->
-    <section id="dashboard" class="hidden" style="margin-top:16px;">
-      <!-- Proje Ekle -->
-      <div class="card" style="margin-bottom:16px;">
-        <h3>Proje Ekle</h3>
-        <form id="project-form" class="form">
-          <input name="title" placeholder="Başlık" required />
-          <input name="link" placeholder="Link (https://...)" type="url" />
-          <input name="tags" placeholder="Etiketler (virgülle ayrılmış: react,node,redis)" />
-          <textarea name="description" rows="3" placeholder="Kısa açıklama" required></textarea>
-          <div class="toolbar">
-            <button class="btn primary" type="submit">Kaydet</button>
-            <span id="project-status" class="mono"></span>
-          </div>
-        </form>
-      </div>
-
-      <!-- Proje Listesi -->
-      <div class="card" style="margin-bottom:16px;">
-        <div class="toolbar" style="justify-content:space-between;">
-          <h3>Projeler</h3>
-          <button id="refresh-projects" class="btn">Yenile</button>
-        </div>
-        <div style="overflow:auto;">
-          <table class="table" id="projects-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Başlık</th>
-                <th>Etiketler</th>
-                <th>Link</th>
-                <th class="right">İşlem</th>
-              </tr>
-            </thead>
-            <tbody><!-- JS dolduracak --></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Mesajlar -->
-      <div class="card">
-        <div class="toolbar" style="justify-content:space-between;">
-          <h3>Mesajlar</h3>
-          <button id="refresh-messages" class="btn">Yenile</button>
-        </div>
-        <div style="overflow:auto;">
-          <table class="table" id="messages-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>İsim</th>
-                <th>E-posta</th>
-                <th>Mesaj</th>
-                <th>Tarih</th>
-              </tr>
-            </thead>
-            <tbody><!-- JS dolduracak --></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="container"><small>© <span id="year"></span> Admin</small></div>
-  </footer>
-  
-
+  <!-- API tabanını MUTLAKA scripts'ten ÖNCE set et -->
   <script>
-  // Şimdilik sabit tutalım ki undefined olmasın:
-  window.__API_BASE__ = "https://evencreed.onrender.com/api";
-</script>
-
+    // Prod backend (Render)
+    window.__API_BASE__ = "https://evencreed.onrender.com/api";
+    // Lokal çalışırken yukarıyı yorum satırı yapıp aşağıyı açabilirsin:
+    // window.__API_BASE__ = "http://localhost:4000/api";
+  </script>
   <script src="./admin.js"></script>
 </body>
 </html>
