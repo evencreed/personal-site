@@ -1,241 +1,62 @@
-const API_BASE = "http://localhost:4000/api";
-const PRODUCTION = true; // canlıda true kalsın
-async function adminLogin(email, password) {
-  const res = await fetch(`${window.__API_BASE__}/auth/login`, {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ email, password })
-  });
-  const text = await res.text();       // <- ÖNCE TEXT
-  if (!res.ok) throw new Error(`HTTP ${res.status} - ${text}`);
-  let data;
-  try { data = JSON.parse(text); }
-  catch { throw new Error(`Non-JSON response: ${text.slice(0,200)}`); }
-  localStorage.setItem('token', data.token);
-  return data;
+// frontend/admin.js
+// HTML’de bu dosyadan ÖNCE şunu ekle:
+// <script>window.__API_BASE__="https://evencreed.onrender.com/api"</script>
+
+const API_BASE = window.__API_BASE__ || "https://evencreed.onrender.com/api";
+
+function authHeaders() {
+  const t = localStorage.getItem('token');
+  return t ? { 'Authorization': `Bearer ${t}` } : {};
 }
 
-if (PRODUCTION) {
-  const seedBtn = document.getElementById("seed-btn");
-  if (seedBtn) seedBtn.style.display = "none";
-}
-
-const els = {
-  year: document.getElementById("year"),
-  logoutBtn: document.getElementById("logout-btn"),
-  loginCard: document.getElementById("login-card"),
-  loginForm: document.getElementById("login-form"),
-  loginStatus: document.getElementById("login-status"),
-  seedBtn: document.getElementById("seed-btn"),
-
-  dashboard: document.getElementById("dashboard"),
-
-  projectForm: document.getElementById("project-form"),
-  projectStatus: document.getElementById("project-status"),
-  refreshProjects: document.getElementById("refresh-projects"),
-  projectsTableBody: document.querySelector("#projects-table tbody"),
-
-  refreshMessages: document.getElementById("refresh-messages"),
-  messagesTableBody: document.querySelector("#messages-table tbody"),
-};
-
-els.year.textContent = new Date().getFullYear();
-
-function getToken() {
-  return localStorage.getItem("token") || "";
-}
-function setToken(t) {
-  if (!t) localStorage.removeItem("token");
-  else localStorage.setItem("token", t);
-}
-function authHeader() {
-  const t = getToken();
-  return t ? { Authorization: `Bearer ${t}` } : {};
-}
-function show(el) { el.classList.remove("hidden"); }
-function hide(el) { el.classList.add("hidden"); }
-
-function fmtDate(iso) {
-  try { return new Date(iso).toLocaleString(); } catch { return ""; }
-}
-
-async function api(path, options = {}) {
-  const res = await fetch(`${API_BASE}${path}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...(options.headers || {}),
-    }
-  });
-  if (res.status === 401) throw new Error("UNAUTHORIZED");
-  const txt = await res.text();
-  try { return { ok: res.ok, data: JSON.parse(txt) }; }
-  catch { return { ok: res.ok, data: txt }; }
-}
-
-async function tryAuthFlow() {
-  const token = getToken();
-
-  // 1) Token yoksa daima LOGIN ekranını göster
-  if (!token) {
-    show(els.loginCard);
-    hide(els.dashboard);
-    return;
-  }
-
-  // 2) Token varsa projeleri çekmeyi dene; başarısızsa login'e geri dön
-  try {
-    const r = await api("/projects", { headers: authHeader() });
-    if (!r.ok) throw new Error(r.data?.error || "Auth failed");
-    hide(els.loginCard);
-    show(els.dashboard);
-    renderProjects(Array.isArray(r.data) ? r.data : []);
-    await loadMessages();
-  } catch (e) {
-    setToken(""); // geçersiz token temizle
-    show(els.loginCard);
-    hide(els.dashboard);
-    els.loginStatus.textContent = "Oturum geçersiz veya süresi doldu. Lütfen tekrar giriş yapın.";
-  }
-}
-
-async function loadProjects() {
-  const r = await api("/projects", { headers: authHeader() });
-  if (!r.ok) throw new Error(r.data?.error || "Projeler alınamadı");
-  renderProjects(r.data || []);
-}
-
-function renderProjects(list) {
-  els.projectsTableBody.innerHTML = "";
-  list.forEach(p => {
-    const tr = document.createElement("tr");
-    const tags = Array.isArray(p.tags) ? p.tags.join(", ") : (p.tags || "");
-    tr.innerHTML = `
-      <td class="mono">${p.id}</td>
-      <td>${p.title}</td>
-      <td>${tags}</td>
-      <td>${p.link ? `<a href="${p.link}" target="_blank">Aç</a>` : ""}</td>
-      <td class="right">
-        <button data-id="${p.id}" class="btn danger">Sil</button>
-      </td>
-    `;
-    els.projectsTableBody.appendChild(tr);
-  });
-}
-
-async function loadMessages() {
-  const r = await api("/messages", { headers: authHeader() });
-  if (!r.ok) throw new Error(r.data?.error || "Mesajlar alınamadı");
-  renderMessages(r.data || []);
-}
-
-function renderMessages(list) {
-  els.messagesTableBody.innerHTML = "";
-  list.forEach(m => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td class="mono">${m.id}</td>
-      <td>${m.name}</td>
-      <td><a href="mailto:${m.email}">${m.email}</a></td>
-      <td>${m.body}</td>
-      <td class="mono">${fmtDate(m.createdAt)}</td>
-    `;
-    els.messagesTableBody.appendChild(tr);
-  });
-}
-
-// EVENTS
-els.logoutBtn.addEventListener("click", () => {
-  setToken("");
-  location.reload();
-});
-
-els.loginForm.addEventListener("submit", async (e) => {
+// ---- Login formu
+document.getElementById('admin-login-form')?.addEventListener('submit', async (e) => {
   e.preventDefault();
-  els.loginStatus.textContent = "Giriş yapılıyor...";
   const email = e.target.email.value.trim();
   const password = e.target.password.value.trim();
+
   try {
-    const r = await api("/auth/login", {
-      method: "POST",
-      body: JSON.stringify({ email, password })
+    const res = await fetch(`${API_BASE}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
     });
-    if (!r.ok) throw new Error(r.data?.error || "Giriş başarısız");
-    setToken(r.data.token);
-    els.loginStatus.textContent = "Giriş başarılı.";
-    await tryAuthFlow();
+    const text = await res.text(); // önce text
+    if (!res.ok) throw new Error(`HTTP ${res.status} - ${text}`);
+
+    const data = JSON.parse(text);
+    localStorage.setItem('token', data.token);
+    alert('Giriş başarılı!');
+    await loadMessages();
   } catch (err) {
-    els.loginStatus.textContent = "Hata: " + err.message;
+    console.error(err);
+    alert('Giriş başarısız: ' + err.message);
   }
 });
 
-// İlk kurulum için admin oluşturma (canlıda kaldır)
-els.seedBtn.addEventListener("click", async () => {
-  const email = els.loginForm.email.value.trim();
-  const password = els.loginForm.password.value.trim();
-  if (!email || password.length < 6) {
-    els.loginStatus.textContent = "Geçerli e-posta ve en az 6 haneli şifre gir.";
-    return;
-  }
-  els.loginStatus.textContent = "Admin oluşturuluyor...";
+// ---- Mesajları listele (korumalı GET /api/messages)
+async function loadMessages() {
+  const listEl = document.getElementById('messages-list');
+  if (!listEl) return;
+
+  listEl.innerHTML = '<li>Yükleniyor...</li>';
   try {
-    const r = await api("/auth/seed-admin", {
-      method: "POST",
-      body: JSON.stringify({ email, password })
+    const res = await fetch(`${API_BASE}/messages`, {
+      headers: { 'Content-Type': 'application/json', ...authHeaders() },
     });
-    if (!r.ok) throw new Error(r.data?.error || "Oluşturulamadı (zaten var olabilir).");
-    els.loginStatus.textContent = "Admin hazır. Şimdi giriş yap.";
+    const text = await res.text();
+    if (!res.ok) throw new Error(`HTTP ${res.status} - ${text}`);
+    const rows = JSON.parse(text);
+
+    if (!rows.length) {
+      listEl.innerHTML = '<li>Mesaj yok.</li>';
+      return;
+    }
+    listEl.innerHTML = rows.map(
+      m => `<li><b>${escapeHtml(m.name)}</b> &lt;${escapeHtml(m.email)}&gt; — ${escapeHtml(m.body)} <small>${new Date(m.createdAt).toLocaleString()}</small></li>`
+    ).join('');
   } catch (err) {
-    els.loginStatus.textContent = "Hata: " + err.message;
+    console.error(err);
+    listEl.innerHTML = `<li style="color:red">Hata: ${escapeHtml(err.message)}</li>`;
   }
-});
-
-// Proje ekleme
-els.projectForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  els.projectStatus.textContent = "Kaydediliyor...";
-  const form = e.target;
-  const title = form.title.value.trim();
-  const description = form.description.value.trim();
-  const link = form.link.value.trim();
-  const tags = form.tags.value.split(",").map(s => s.trim()).filter(Boolean);
-
-  try {
-    const r = await api("/projects", {
-      method: "POST",
-      headers: { ...authHeader() },
-      body: JSON.stringify({ title, description, link: link || undefined, tags })
-    });
-    if (!r.ok) throw new Error(r.data?.error || "Kaydedilemedi");
-    els.projectStatus.textContent = "Kaydedildi.";
-    form.reset();
-    await loadProjects();
-  } catch (err) {
-    els.projectStatus.textContent = "Hata: " + err.message;
-  }
-});
-
-els.refreshProjects.addEventListener("click", loadProjects);
-els.refreshMessages.addEventListener("click", loadMessages);
-
-// Silme (event delegation)
-els.projectsTableBody.addEventListener("click", async (e) => {
-  const btn = e.target.closest("button[data-id]");
-  if (!btn) return;
-  const id = btn.getAttribute("data-id");
-  if (!confirm(`#${id} nolu projeyi silmek istiyor musun?`)) return;
-
-  try {
-    const r = await api(`/projects/${id}`, {
-      method: "DELETE",
-      headers: { ...authHeader() }
-    });
-    if (!r.ok) throw new Error(r.data?.error || "Silinemedi");
-    await loadProjects();
-  } catch (err) {
-    alert("Hata: " + err.message);
-  }
-});
-
-// Başlangıç
-tryAuthFlow();
+}
