@@ -17,6 +17,16 @@ const app = express();
 app.use(express.json());
 app.use(cors({ origin: allowed.length ? allowed : true }));
 
+// Geçici DB teşhis ucu: hangi DB'ye bağlıyım?
+app.get('/api/db-check', async (_req, res) => {
+  try {
+    const info = await prisma.$queryRaw`select current_user, current_database()`;
+    res.json({ ok: true, info });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
 // -------- Health
 app.get('/api/health', (_req, res) => {
   res.json({ ok: true });
