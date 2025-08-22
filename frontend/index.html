@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Kişisel Site</title>
 
-  <!-- Hızlı ve profesyonel ince font -->
+  <!-- İnce/pro font -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="./styles.css?v=9" />
+  <link rel="stylesheet" href="./styles.css?v=10" />
   <meta name="color-scheme" content="dark light">
 </head>
 <body>
@@ -18,13 +18,22 @@
 
   <header class="topbar">
     <nav class="nav">
-      <a href="#home" class="brand">evencreed</a>
+      <a href="#home" class="brand" data-i18n="nav.brand">evencreed</a>
       <ul class="links">
-        <li><a href="#cv">CV</a></li>
-        <li><a href="#hobbies">Hobiler</a></li>
-        <li><a href="#contact">İletişim</a></li>
+        <li><a href="#cv" data-i18n="nav.cv">CV</a></li>
+        <li><a href="#hobbies" data-i18n="nav.hobbies">Hobiler</a></li>
+        <li><a href="#contact" data-i18n="nav.contact">İletişim</a></li>
       </ul>
-      <button id="themeToggle" class="btn navbtn" title="Tema Değiştir">🌗</button>
+
+      <div class="nav-controls">
+        <!-- Dil seçici -->
+        <select id="langSelect" class="langsel" aria-label="Language">
+          <option value="tr">TR</option>
+          <option value="en">EN</option>
+        </select>
+        <!-- Tema -->
+        <button id="themeToggle" class="btn navbtn" title="Tema">🌗</button>
+      </div>
     </nav>
   </header>
 
@@ -32,60 +41,63 @@
     <!-- HERO -->
     <section class="card hero">
       <div class="hex">
-        <img src="./assets/profile.jpeg" alt="Fotoğrafım" onerror="this.style.display='none'">
+        <img src="./assets/me.jpg" alt="Fotoğrafım" onerror="this.style.display='none'">
       </div>
 
       <div class="hero-copy float">
-        <h1>Merhaba, ben <span class="accent">Mert</span> 👋</h1>
-        <p class="muted">
+        <h1><span data-i18n="hero.title" data-i18n-params='{"name":"Mert"}'>Merhaba, ben Mert 👋</span></h1>
+        <p class="muted" data-i18n="hero.desc">
           Rock / piyano esintili siyah-beyaz palet. Minimal ama canlı.
           Aşağıdan CV’ye bakabilir, bana mesaj bırakabilirsin.
         </p>
         <div class="row">
-          <a class="btn primary" href="#cv">CV Gör</a>
-          <a class="btn" href="#contact">İletişim</a>
+          <a class="btn primary" href="#cv" data-i18n="btn.cv">CV Gör</a>
+          <a class="btn" href="#contact" data-i18n="btn.contact">İletişim</a>
         </div>
       </div>
     </section>
 
     <!-- CV -->
     <section id="cv" class="card">
-      <h2>CV</h2>
-      <p>Özet: Frontend (HTML/CSS/JS), Backend (Node/Express/Prisma), SQL (Postgres).</p>
+      <h2 data-i18n="cv.title">CV</h2>
+      <p data-i18n="cv.summary">Özet: Frontend (HTML/CSS/JS), Backend (Node/Express/Prisma), SQL (Postgres).</p>
       <ul class="bullets">
-        <li>JavaScript / Express / Prisma</li>
-        <li>Responsive UI, modern tasarım</li>
-        <li>DevOps: Vercel + Render + Supabase</li>
+        <li data-i18n="cv.item1">JavaScript / Express / Prisma</li>
+        <li data-i18n="cv.item2">Responsive UI, modern tasarım</li>
+        <li data-i18n="cv.item3">DevOps: Vercel + Render + Supabase</li>
       </ul>
       <div class="row">
-        <a class="btn" href="./assets/cv.pdf" target="_blank" rel="noreferrer">PDF İndir</a>
+        <a class="btn" href="./assets/cv.pdf" target="_blank" rel="noreferrer" data-i18n="cv.download">PDF İndir</a>
       </div>
     </section>
 
     <!-- Hobiler -->
     <section id="hobbies" class="card">
-      <h2>Hobiler</h2>
-      <p>Müzik (piyano), rock dinlemek, fotoğrafçılık, minimal tasarım.</p>
+      <h2 data-i18n="hobbies.title">Hobiler</h2>
+      <p data-i18n="hobbies.desc">Müzik (piyano), rock dinlemek, fotoğrafçılık, minimal tasarım.</p>
     </section>
 
     <!-- İletişim -->
     <section id="contact" class="card">
-      <h2>İletişim</h2>
+      <h2 data-i18n="contact.title">İletişim</h2>
       <form id="contact-form" autocomplete="on">
-        <label for="name">Ad Soyad</label>
-        <input id="name" name="name" type="text" placeholder="Adınız" required />
+        <label for="name" data-i18n="contact.name">Ad Soyad</label>
+        <input id="name" name="name" type="text" placeholder="Adınız"
+               data-i18n="contact.placeholder.name" data-i18n-attr="placeholder" required />
 
-        <label for="email">E-posta</label>
-        <input id="email" name="email" type="email" placeholder="ornek@mail.com" required />
+        <label for="email" data-i18n="contact.email">E-posta</label>
+        <input id="email" name="email" type="email" placeholder="ornek@mail.com"
+               data-i18n="contact.placeholder.email" data-i18n-attr="placeholder" required />
 
-        <label for="message">Mesaj</label>
-        <textarea id="message" name="message" rows="5" placeholder="Merhaba..." required></textarea>
+        <label for="message" data-i18n="contact.message">Mesaj</label>
+        <textarea id="message" name="message" rows="5" placeholder="Merhaba..."
+                  data-i18n="contact.placeholder.message" data-i18n-attr="placeholder" required></textarea>
 
         <!-- Honeypot (bot yakalama) -->
         <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true"/>
 
         <div class="row">
-          <button type="submit" class="btn primary">Gönder</button>
+          <button type="submit" class="btn primary" data-i18n="btn.send">Gönder</button>
         </div>
         <p id="contact-status" class="muted"></p>
       </form>
@@ -103,6 +115,7 @@
     // Lokal geliştirirken üst satırı yorumlayıp şunu aç:
     // window.__API_BASE__ = "http://localhost:4000/api";
   </script>
-  <script src="./app.js?v=9"></script>
+  <script src="./i18n.js?v=10"></script>
+  <script src="./app.js?v=10"></script>
 </body>
 </html>
