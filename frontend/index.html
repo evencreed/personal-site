@@ -117,9 +117,20 @@
   <canvas id="cursor-trail" class="bg-canvas"></canvas>
 
   <script>
-    /* İstersen canlıda backend adresini buradan set edebilirsin: */
-    // window.__API_BASE__ = "https://api-senin.onrender.com/api";
-  </script>
+  // Prod backend (Render)
+  const PROD_API = "https://evencreed.onrender.com/api";
+  // Lokal geliştirme (istersen)
+  const LOCAL_API = "https://localhost:4000/api";
+
+  // Ortama göre otomatik seç (Vercel domaini veya kendi alan adın prod sayılır)
+  const isProd =
+    location.hostname.endsWith(".vercel.app") ||
+    location.hostname === "https://personal-site-mert-topacoglus-projects.vercel.app" ||      // kendi domainini ekleyebilirsin
+    
+
+  window.__API_BASE__ = isProd ? PROD_API : LOCAL_API;
+</script>
+
   <script src="./app.js"></script>
 </body>
 </html>
