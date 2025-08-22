@@ -121,17 +121,27 @@ async function apiLogin(email, password) {
     body: JSON.stringify({ email, password })
   });
   const text = await res.text();
-  if (!res.ok) throw new Error(`HTTP ${res.status} - ${text}`);
-  const data = JSON.parse(text);
-  if (!data.token) throw new Error('Token alınamadı');
+
+  // Hata: önce JSON'u dene
+  let data = null;
+  try { data = JSON.parse(text); } catch {}
+
+  if (!res.ok) {
+    // 401 ise ve backend "Invalid credentials" döndüyse özel mesaj göster
+    if (res.status === 401 && (data?.error || text).toLowerCase().includes('invalid credentials')) {
+      throw new Error('Şifre yanlış');
+    }
+    if (res.status === 400) {
+      throw new Error('E-posta ve şifre zorunludur');
+    }
+    // diğerleri için ham hata
+    throw new Error(`HTTP ${res.status} - ${text}`);
+  }
+
+  // Başarılı
+  if (!data?.token) throw new Error('Token alınamadı');
   localStorage.setItem('token', data.token);
   return data;
-}
-async function apiListMessages() {
-  const res = await fetch(`${API_BASE}/messages`, { headers: { ...authHeaders() }});
-  const text = await res.text();
-  if (!res.ok) throw new Error(`HTTP ${res.status} - ${text}`);
-  return JSON.parse(text);
 }
 
 /* ========== Mesaj grid render ========== */
