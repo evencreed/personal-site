@@ -1,129 +1,214 @@
-// admin.js
+// admin.js — modern arayüz + uçuşan çizgiler + tema toggle
 const API_BASE = window.__API_BASE__ || "https://evencreed.onrender.com/api";
 
-// Mini yardımcılar
-const qs = (s) => document.querySelector(s);
-const statusEl = () => qs('#admin-status');
-const outEl = () => qs('#admin-output');
+/* ========== Yardımcılar ========== */
+const $ = (s) => document.querySelector(s);
+const html = document.documentElement;
 
-function setStatus(msg, ok = true) {
-  const el = statusEl(); if (!el) return;
-  el.textContent = msg;
-  el.className = ok ? 'ok' : 'err';
+function setTheme(mode) {
+  html.setAttribute('data-theme', mode);
+  localStorage.setItem('theme', mode);
 }
-function showOut(obj) {
-  const el = outEl(); if (!el) return;
-  el.textContent = typeof obj === 'string' ? obj : JSON.stringify(obj, null, 2);
+function getTheme() {
+  return localStorage.getItem('theme') || 'dark';
+}
+function fromNow(d) {
+  const t = new Date(d).getTime();
+  const diff = Math.max(1, Math.floor((Date.now() - t) / 1000));
+  if (diff < 60) return `${diff}s önce`;
+  const m = Math.floor(diff/60); if (m < 60) return `${m}dk önce`;
+  const h = Math.floor(m/60); if (h < 24) return `${h}s önce`;
+  const day = Math.floor(h/24); return `${day}g önce`;
+}
+function esc(s) {
+  return String(s)
+    .replaceAll('&','&amp;').replaceAll('<','&lt;')
+    .replaceAll('>','&gt;').replaceAll('"','&quot;')
+    .replaceAll("'","&#039;");
 }
 function authHeaders() {
   const t = localStorage.getItem('token');
   return t ? { 'Authorization': `Bearer ${t}` } : {};
 }
 
-// Sayfa yüklendiğinde formu bağla
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('[admin.js] loaded. API_BASE =', API_BASE);
+/* ========== Arkaplan: uçuşan çizgiler ========== */
+(function linesBackground(){
+  const canvas = document.getElementById('bgCanvas');
+  const ctx = canvas.getContext('2d');
+  let DPR = Math.max(1, window.devicePixelRatio || 1);
+  let W, H, lines = [];
 
-  const form = qs('#admin-login-form');
-  if (!form) {
-    console.warn('Form bulunamadı: #admin-login-form');
-    setStatus('Form bulunamadı (#admin-login-form).', false);
-    return;
-  } else {
-    setStatus('Form hazır. Giriş yapabilirsiniz.', true);
+  function color() {
+    // CSS değişkeninden çizgi rengini al
+    return getComputedStyle(document.documentElement).getPropertyValue('--line').trim() || '#fff';
+  }
+  function resize() {
+    W = canvas.width = Math.floor(window.innerWidth * DPR);
+    H = canvas.height = Math.floor(window.innerHeight * DPR);
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    // çizgileri yeniden oluştur
+    const count = Math.round((window.innerWidth * window.innerHeight) / 18000);
+    lines = Array.from({length: count}, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      len: (30 + Math.random()*90) * DPR,
+      spd: (0.3 + Math.random()*1.2) * DPR,
+      dir: Math.random() * Math.PI * 2,
+      thick: (0.6 + Math.random()*1.2) * DPR,
+      alpha: 0.12 + Math.random()*0.15
+    }));
+  }
+  function step() {
+    ctx.clearRect(0,0,W,H);
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.strokeStyle = color();
+
+    for (const l of lines) {
+      const dx = Math.cos(l.dir) * l.len;
+      const dy = Math.sin(l.dir) * l.len;
+
+      ctx.globalAlpha = l.alpha;
+      ctx.lineWidth = l.thick;
+      ctx.beginPath();
+      ctx.moveTo(l.x, l.y);
+      ctx.lineTo(l.x + dx, l.y + dy);
+      ctx.stroke();
+
+      // hareket (hafif yön salınımı)
+      l.x += Math.cos(l.dir) * l.spd;
+      l.y += Math.sin(l.dir) * l.spd;
+      l.dir += (Math.random() - 0.5) * 0.01;
+
+      // ekran dışına taşarsa sar
+      if (l.x < -l.len) l.x = W + l.len;
+      if (l.x > W + l.len) l.x = -l.len;
+      if (l.y < -l.len) l.y = H + l.len;
+      if (l.y > H + l.len) l.y = -l.len;
+    }
+    requestAnimationFrame(step);
   }
 
-  form.addEventListener('submit', async (e) => {
+  window.addEventListener('resize', resize);
+  new MutationObserver(resize).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  resize(); step();
+})();
+
+/* ========== Tema Toggle ========== */
+(function themeInit(){
+  setTheme(getTheme());
+  $('#themeToggle')?.addEventListener('click', () => {
+    setTheme(getTheme()==='dark' ? 'light' : 'dark');
+  });
+})();
+
+/* ========== Görünümler: login vs dashboard ========== */
+function showLogin() {
+  $('#view-login')?.classList.remove('hidden');
+  $('#view-dashboard')?.classList.add('hidden');
+  $('#admin-status').textContent = 'Giriş yapınız.';
+}
+function showDashboard() {
+  $('#view-login')?.classList.add('hidden');
+  $('#view-dashboard')?.classList.remove('hidden');
+}
+
+/* ========== API ========== */
+async function apiLogin(email, password) {
+  const res = await fetch(`${API_BASE}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type':'application/json' },
+    body: JSON.stringify({ email, password })
+  });
+  const text = await res.text();
+  if (!res.ok) throw new Error(`HTTP ${res.status} - ${text}`);
+  const data = JSON.parse(text);
+  if (!data.token) throw new Error('Token alınamadı');
+  localStorage.setItem('token', data.token);
+  return data;
+}
+async function apiListMessages() {
+  const res = await fetch(`${API_BASE}/messages`, { headers: { ...authHeaders() }});
+  const text = await res.text();
+  if (!res.ok) throw new Error(`HTTP ${res.status} - ${text}`);
+  return JSON.parse(text);
+}
+
+/* ========== Mesaj grid render ========== */
+function renderMessages(rows) {
+  $('#kpi-messages').textContent = rows.length.toString();
+  const grid = $('#msgGrid');
+  if (!grid) return;
+  if (!rows.length) {
+    grid.innerHTML = `<div class="muted">Mesaj bulunamadı.</div>`;
+    return;
+  }
+  grid.innerHTML = rows.map(m => {
+    const initials = (m.name || '?').trim()[0]?.toUpperCase() || '?';
+    return `
+      <article class="msg-card">
+        <div class="msg-head">
+          <div class="msg-avatar">${esc(initials)}</div>
+          <div>
+            <div class="msg-name">${esc(m.name)}</div>
+            <div class="msg-mail">${esc(m.email)}</div>
+          </div>
+        </div>
+        <div class="msg-body">${esc(m.body)}</div>
+        <div class="msg-time">${fromNow(m.createdAt)}</div>
+      </article>
+    `;
+  }).join('');
+}
+
+/* ========== Event binding ========== */
+document.addEventListener('DOMContentLoaded', () => {
+  // Eğer token varsa direkt dashboard
+  if (localStorage.getItem('token')) {
+    showDashboard();
+    apiListMessages()
+      .then(renderMessages)
+      .catch(err => { console.error(err); showLogin(); });
+  } else {
+    showLogin();
+  }
+
+  // Login form
+  $('#admin-login-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const btn = qs('#login-btn');
+    const btn = $('#login-btn');
     const email = e.target.email.value.trim();
     const password = e.target.password.value.trim();
-
     try {
       btn && (btn.disabled = true);
-      setStatus('Giriş yapılıyor…');
-
-      const res = await fetch(`${API_BASE}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const text = await res.text(); // önce text al ki hata HTML ise görelim
-      console.log('LOGIN response:', res.status, text);
-
-      if (!res.ok) throw new Error(`HTTP ${res.status} - ${text}`);
-
-      // JSON bekliyoruz
-      let data;
-      try { data = JSON.parse(text); }
-      catch { throw new Error('Geçersiz JSON: ' + text.slice(0, 200)); }
-
-      if (!data.token) throw new Error('Token alınamadı');
-      localStorage.setItem('token', data.token);
-      setStatus('Giriş başarılı!', true);
-
-      await loadMessages();
+      $('#admin-status').textContent = 'Giriş yapılıyor…';
+      await apiLogin(email, password);
+      $('#admin-status').textContent = '';
+      showDashboard();
+      const rows = await apiListMessages();
+      renderMessages(rows);
     } catch (err) {
-      console.error('[LOGIN ERROR]', err);
-      setStatus('Giriş başarısız: ' + err.message, false);
+      console.error(err);
+      $('#admin-status').textContent = 'Giriş başarısız: ' + err.message;
     } finally {
       btn && (btn.disabled = false);
     }
   });
 
-  // Listeleme butonu
-  qs('#btn-list-messages')?.addEventListener('click', () => {
-    loadMessages().catch(err => {
-      console.error('[LIST ERROR]', err);
-      setStatus('Mesajlar alınamadı: ' + err.message, false);
-    });
+  // Yenile
+  $('#btn-refresh')?.addEventListener('click', async () => {
+    try {
+      const rows = await apiListMessages();
+      renderMessages(rows);
+    } catch (err) {
+      console.error(err);
+      alert('Mesajlar alınamadı: ' + err.message);
+    }
   });
 
   // Çıkış
-  qs('#admin-logout')?.addEventListener('click', () => {
+  $('#admin-logout')?.addEventListener('click', () => {
     localStorage.removeItem('token');
-    setStatus('Çıkış yapıldı', true);
-    showOut('Henüz veri yok.');
-    qs('#messages-list').innerHTML = '';
+    showLogin();
   });
-
-  // Sayfa açıldığında token varsa otomatik listele
-  if (localStorage.getItem('token')) {
-    loadMessages().catch(console.error);
-  }
 });
-
-async function loadMessages() {
-  setStatus('Mesajlar yükleniyor…');
-  const res = await fetch(`${API_BASE}/messages`, {
-    headers: { 'Content-Type': 'application/json', ...authHeaders() },
-  });
-  const text = await res.text();
-  console.log('MESSAGES response:', res.status);
-
-  if (!res.ok) throw new Error(`HTTP ${res.status} - ${text}`);
-  let rows;
-  try { rows = JSON.parse(text); }
-  catch { throw new Error('Geçersiz JSON: ' + text.slice(0, 200)); }
-
-  if (!Array.isArray(rows)) throw new Error('Liste bekleniyordu.');
-  setStatus(`Mesajlar yüklendi (${rows.length})`, true);
-  showOut(rows);
-
-  const ul = qs('#messages-list');
-  if (ul) {
-    ul.innerHTML = rows.length
-      ? rows.map(m => `<li><b>${escapeHtml(m.name)}</b> &lt;${escapeHtml(m.email)}&gt; — ${escapeHtml(m.body)} <small>${new Date(m.createdAt).toLocaleString()}</small></li>`).join('')
-      : '<li>Mesaj yok.</li>';
-  }
-}
-
-function escapeHtml(s) {
-  return String(s)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
