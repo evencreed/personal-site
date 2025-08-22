@@ -1,127 +1,168 @@
-// i18n.js — basit, dosyasız i18n motoru (TR/EN)
-// data-i18n="key", data-i18n-attr="placeholder" (opsiyon), data-i18n-params='{"name":"..."}'
-(function(){
+// i18n.js — TR/EN sözlük + basit i18n motoru
+// Kullanım: data-i18n="key", gerekirse data-i18n-attr="placeholder"
+// Parametre: data-i18n-params='{"name":"Mert"}'
+
+(function () {
   const dict = {
     tr: {
-      'nav.cv':'CV',
-      'nav.hobbies':'Hobiler',
-      'nav.contact':'İletişim',
+      // NAV
+      'nav.brand': 'Evencreed',
+      'nav.cv': 'CV',
+      'nav.hobbies': 'Hobiler',
+      'nav.contact': 'İletişim',
 
-      'hero.title':'Mert Topaçoğlu',
-      'hero.desc':'Ben Mert Topaçoğlu(Evencreed). Kod yazmak benim için sadece bir iş değil, aynı zamanda yaratıcılığımı ifade etmenin bir yolu. 
-        Frontend’de HTML, CSS, JavaScript ve React ile modern, kullanıcı dostu arayüzler kurmayı seviyorum. Backend tarafında Node.js, 
-    Express ve Prisma ile güçlü ve esnek uygulamalar geliştiriyorum. Postgres ile veriyi düzenli ve anlamlı hale getirmek benim için ayrı bir keyif.
-
+      // HERO
+      'hero.title': 'Mert Topaçoğlu',
+      // Uzun paragraf: senin yazdığın metinle birebir
+      'hero.desc': `Ben Mert Topaçoğlu (Evencreed). Kod yazmak benim için sadece bir iş değil, aynı zamanda yaratıcılığımı ifade etmenin bir yolu.
+Frontend’de HTML, CSS, JavaScript ve React ile modern, kullanıcı dostu arayüzler kurmayı seviyorum. 
+Backend tarafında Node.js, Express ve Prisma ile güçlü ve esnek uygulamalar geliştiriyorum. 
+Postgres ile veriyi düzenli ve anlamlı hale getirmek benim için ayrı bir keyif.
 Yeni teknolojiler öğrenmekten hoşlanıyorum; özellikle TypeScript, Next.js ve GraphQL üzerinde kendimi sürekli geliştirmeye çalışıyorum. 
-    Projelerimi hayata geçirirken Vercel, Render ve Supabase gibi platformlarla fikirlerimi hızla dünyaya açmak bana enerji veriyor. 
-    Kısacası; hem düzeni hem de özgünlüğü önemseyen, yazılımı bir sanat gibi gören biriyim.',
+Projelerimi hayata geçirirken Vercel, Render ve Supabase gibi platformlarla fikirlerimi hızla dünyaya açmak bana enerji veriyor. 
+Kısacası; hem düzeni hem de özgünlüğü önemseyen, yazılımı bir sanat gibi gören biriyim.`,
 
-      'btn.cv':'CV Gör',
-      'btn.contact':'İletişim',
-      'btn.send':'Gönder',
+      // BUTONLAR
+      'btn.cv': 'CV Gör',
+      'btn.contact': 'İletişim',
+      'btn.send': 'Gönder',
 
-      'cv.title':'CV',
-      'cv.summary':'Özet: Frontend (HTML/CSS/JS), Backend (Node/Express/Prisma), SQL (Postgres).',
-      'cv.item1':'JavaScript / Express / Prisma',
-      'cv.item2':'Responsive UI, modern tasarım',
-      'cv.item3':'DevOps: Vercel + Render + Supabase',
-      'cv.download':'PDF İndir',
+      // CV
+      'cv.title': 'CV',
+      'cv.summary': 'Özet: Frontend (HTML/CSS/JS), Backend (Node/Express/Prisma), SQL (Postgres).',
+      'cv.item1': 'JavaScript / Express / Prisma',
+      'cv.item2': 'Responsive UI, modern tasarım',
+      'cv.item3': 'DevOps: Vercel + Render + Supabase',
+      'cv.download': 'CV İndir',
 
-      'hobbies.title':'Hobiler',
-      'hobbies.desc':'Aynı zamanda müzik prodüksiyonuyla uğraşıyorum; seslerle hikâye kurmayı ve duyguyu teknikle buluşturmayı seviyorum.
-        Boş zamanlarımda dövme sanatıyla uğraşıyor, aksiyon sporlarının adrenaliniyle enerjimi tazeliyorum. 
-        Satranç ise strateji ve odak tarafımı canlı tutuyor, dengemi sağlıyor.',
+      // HOBİLER
+      'hobbies.title': 'Hobiler',
+      'hobbies.desc': `Aynı zamanda müzik prodüksiyonuyla uğraşıyorum; seslerle hikâye kurmayı ve duyguyu teknikle buluşturmayı seviyorum.
+Boş zamanlarımda dövme sanatıyla uğraşıyor, aksiyon sporlarının adrenaliniyle enerjimi tazeliyorum. 
+Satranç ise strateji ve odak tarafımı canlı tutuyor, dengemi sağlıyor.`,
 
-      'contact.title':'İletişim',
-      'contact.name':'Ad Soyad',
-      'contact.email':'E-posta',
-      'contact.message':'Mesaj',
-      'contact.placeholder.name':'Adınız',
-      'contact.placeholder.email':'ornek@mail.com',
-      'contact.placeholder.message':'Merhaba...',
+      // İLETİŞİM
+      'contact.title': 'İletişim',
+      'contact.name': 'Ad Soyad',
+      'contact.email': 'E-posta',
+      'contact.message': 'Mesaj',
+      'contact.placeholder.name': 'Adınız',
+      'contact.placeholder.email': 'ornek@mail.com',
+      'contact.placeholder.message': 'Merhaba...',
 
-      'status.sending':'Gönderiliyor…',
-      'status.sent':'Mesaj gönderildi, teşekkürler!',
-      'status.error':'Mesaj gönderilemedi: {err}'
+      // DURUM METİNLERİ
+      'status.sending': 'Gönderiliyor…',
+      'status.sent': 'Mesaj gönderildi, teşekkürler!',
+      'status.error': 'Mesaj gönderilemedi: {err}'
     },
+
     en: {
-      'nav.cv':'Resume',
-      'nav.hobbies':'Hobbies',
-      'nav.contact':'Contact',
+      // NAV
+      'nav.brand': 'Evencreed',
+      'nav.cv': 'Resume',
+      'nav.hobbies': 'Hobbies',
+      'nav.contact': 'Contact',
 
-      'hero.title':'Hi, I’m {name} 👋',
-      'hero.desc':'I’m Mert Topaçoğlu(Evencreed). For me, coding isn’t just work—it’s a way of expressing creativity.
-        On the frontend, I enjoy building modern, user-friendly interfaces with HTML, CSS, JavaScript, and React. 
-        On the backend, I develop powerful and flexible applications with Node.js, Express, and Prisma. 
-        Working with Postgres and organizing data into something meaningful is always a joy.
-        I love exploring new technologies, especially TypeScript, Next.js, and GraphQL. 
-        Bringing projects to life with platforms like Vercel, Render, and Supabase keeps me motivated and excited. 
-        In short, I value both structure and originality, and I see software development as a form of art.',
+      // HERO
+      'hero.title': 'Mert Topaçoğlu',
+      'hero.desc': `I’m Mert Topaçoğlu (Evencreed). Writing code is not just work for me—it’s a way to express creativity.
+On the frontend, I enjoy building modern, user-friendly interfaces with HTML, CSS, JavaScript, and React.
+On the backend, I develop robust and flexible apps using Node.js, Express, and Prisma.
+With Postgres, turning data into something organized and meaningful is a joy.
+I love learning new technologies; I continually improve myself in TypeScript, Next.js, and GraphQL.
+Deploying projects on platforms like Vercel, Render, and Supabase energizes me by bringing ideas to life quickly.
+In short, I value both order and originality—I see software as an art.`,
 
-      'btn.cv':'View Resume',
-      'btn.contact':'Contact',
-      'btn.send':'Send',
+      // BUTTONS
+      'btn.cv': 'View Resume',
+      'btn.contact': 'Contact',
+      'btn.send': 'Send',
 
-      'cv.title':'Resume',
-      'cv.summary':'Summary: Frontend (HTML/CSS/JS), Backend (Node/Express/Prisma), SQL (Postgres).',
-      'cv.item1':'JavaScript / Express / Prisma',
-      'cv.item2':'Responsive UI, modern design',
-      'cv.item3':'DevOps: Vercel + Render + Supabase',
-      'cv.download':'Download PDF',
+      // CV
+      'cv.title': 'Resume',
+      'cv.summary': 'Summary: Frontend (HTML/CSS/JS), Backend (Node/Express/Prisma), SQL (Postgres).',
+      'cv.item1': 'JavaScript / Express / Prisma',
+      'cv.item2': 'Responsive UI, modern design',
+      'cv.item3': 'DevOps: Vercel + Render + Supabase',
+      'cv.download': 'Download CV',
 
-      'hobbies.title':'Hobbies',
-      'hobbies.desc':'I also do music production; I love telling stories with sound and blending emotion with technique. In my free time, 
-        I practice the art of tattooing and recharge with the adrenaline of action sports. Chess keeps my strategic focus sharp and helps me stay balanced.',
+      // HOBBIES
+      'hobbies.title': 'Hobbies',
+      'hobbies.desc': `I also work on music production—I love telling stories with sound and blending emotion with technique.
+In my free time, I practice tattoo art and recharge with the adrenaline of action sports.
+Chess keeps my strategic and focused side alive and balanced.`,
 
-      'contact.title':'Contact',
-      'contact.name':'Full Name',
-      'contact.email':'Email',
-      'contact.message':'Message',
-      'contact.placeholder.name':'Your name',
-      'contact.placeholder.email':'you@example.com',
-      'contact.placeholder.message':'Hello...',
+      // CONTACT
+      'contact.title': 'Contact',
+      'contact.name': 'Full Name',
+      'contact.email': 'Email',
+      'contact.message': 'Message',
+      'contact.placeholder.name': 'Your name',
+      'contact.placeholder.email': 'you@example.com',
+      'contact.placeholder.message': 'Hello...',
 
-      'status.sending':'Sending…',
-      'status.sent':'Message sent, thank you!',
-      'status.error':'Could not send: {err}'
+      // STATUS
+      'status.sending': 'Sending…',
+      'status.sent': 'Message sent, thank you!',
+      'status.error': 'Could not send: {err}'
     }
   };
+
+  // Basit template: "Hi {name}" -> params.name
+  function tpl(str, params) {
+    if (!params) return str;
+    return str.replace(/\{(\w+)\}/g, (_, k) => (params[k] ?? ''));
+  }
+
+  function renderAll(lang) {
+    const d = dict[lang] || dict.tr;
+
+    document.querySelectorAll('[data-i18n]').forEach((el) => {
+      const key = el.dataset.i18n;
+      const attr = el.dataset.i18nAttr;
+      let params;
+      try { params = el.dataset.i18nParams ? JSON.parse(el.dataset.i18nParams) : undefined; } catch {}
+
+      const tr = d[key] ?? dict.tr[key] ?? key; // key yoksa TR’ye, o da yoksa key’e düş
+      const val = tpl(tr, params);
+
+      if (attr) el.setAttribute(attr, val);
+      else el.textContent = val;
+    });
+
+    // HTML lang + dil seçiciyi güncelle
+    document.documentElement.lang = lang;
+    const sel = document.getElementById('langSelect');
+    if (sel && sel.value !== lang) sel.value = lang;
+  }
 
   const I18N = {
     current: 'tr',
-    t(key, params){
-      const d = dict[this.current] || dict.tr;
-      let s = d[key] || dict.tr[key] || key;
-      if (params) s = s.replace(/\{(\w+)\}/g, (_,p)=> (params[p] ?? ''));
-      return s;
-    },
-    render(){
-      document.querySelectorAll('[data-i18n]').forEach(el=>{
-        const key = el.dataset.i18n;
-        const attr = el.dataset.i18nAttr;
-        let params = undefined;
-        try { params = el.dataset.i18nParams ? JSON.parse(el.dataset.i18nParams) : undefined; } catch {}
-        const val = this.t(key, params);
-        if (attr) el.setAttribute(attr, val);
-        else el.textContent = val;
-      });
-      // HTML lang ve seçici eşitle
-      document.documentElement.lang = this.current;
-      const sel = document.getElementById('langSelect');
-      if (sel) sel.value = this.current;
+    set(lang) {
+      this.current = dict[lang] ? lang : 'tr';
       localStorage.setItem('lang', this.current);
+      renderAll(this.current);
+    },
+    get() { return this.current; },
+    t(key, params) {
+      const d = dict[this.current] || dict.tr;
+      return tpl(d[key] ?? dict.tr[key] ?? key, params);
+    },
+    init() {
+      const stored = localStorage.getItem('lang');
+      const guess = (navigator.language || 'tr').toLowerCase().startsWith('en') ? 'en' : 'tr';
+      this.current = stored || guess;
+      renderAll(this.current);
+
+      // Dil seçici bağla
+      const sel = document.getElementById('langSelect');
+      if (sel) {
+        sel.value = this.current;
+        sel.addEventListener('change', (e) => this.set(e.target.value));
+      }
     }
   };
 
-  window.i18n = {
-    set(lang){ I18N.current = (dict[lang] ? lang : 'tr'); I18N.render(); },
-    get(){ return I18N.current; },
-    t(key, params){ return I18N.t(key, params); },
-    init(){
-      const stored = localStorage.getItem('lang');
-      const guess = (navigator.language || 'tr').toLowerCase().startsWith('en') ? 'en' : 'tr';
-      I18N.current = stored || guess;
-      I18N.render();
-    }
-  };
+  // Global export
+  window.i18n = I18N;
 })();
