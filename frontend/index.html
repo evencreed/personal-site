@@ -130,6 +130,10 @@
 
   window.__API_BASE__ = isProd ? PROD_API : LOCAL_API;
 </script>
+  <script>
+  // Şimdilik sabit tutalım ki undefined olmasın:
+  window.__API_BASE__ = "https://evencreed.onrender.com/api";
+</script>
 
   <script src="./app.js"></script>
 </body>
