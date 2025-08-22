@@ -22,7 +22,9 @@
       'cv.download':'PDF İndir',
 
       'hobbies.title':'Hobiler',
-      'hobbies.desc':'Müzik (piyano), rock dinlemek, fotoğrafçılık, minimal tasarım.',
+      'hobbies.desc':'Aynı zamanda müzik prodüksiyonuyla uğraşıyorum; seslerle hikâye kurmayı ve duyguyu teknikle buluşturmayı seviyorum.
+        Boş zamanlarımda dövme sanatıyla uğraşıyor, aksiyon sporlarının adrenaliniyle enerjimi tazeliyorum. 
+        Satranç ise strateji ve odak tarafımı canlı tutuyor, dengemi sağlıyor.',
 
       'contact.title':'İletişim',
       'contact.name':'Ad Soyad',
@@ -56,7 +58,8 @@
       'cv.download':'Download PDF',
 
       'hobbies.title':'Hobbies',
-      'hobbies.desc':'Music (piano), listening to rock, photography, minimal design.',
+      'hobbies.desc':'I also do music production; I love telling stories with sound and blending emotion with technique. In my free time, 
+        I practice the art of tattooing and recharge with the adrenaline of action sports. Chess keeps my strategic focus sharp and helps me stay balanced.',
 
       'contact.title':'Contact',
       'contact.name':'Full Name',
