@@ -231,6 +231,14 @@ textarea{ resize:vertical }
   background: #111;
 }
 
+.home-container .social-links {
+  display: flex;
+  justify-content: center; /* yatayda ortalar */
+  align-items: center;     /* dikeyde ortalar */
+  margin-top: 20px;
+  width: 100%;
+}
+
 /* Footer */
 .footer{
   position:relative; z-index:2; border-top:1px solid var(--border);
