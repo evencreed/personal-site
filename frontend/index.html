@@ -1,127 +1,97 @@
 <!doctype html>
-<html lang="tr" class="dark">
+<html lang="tr" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Mert Topaçoğlu– </title>
-
-  <link rel="icon" href="./assets/favicon.ico" />
-  <!-- Rock/Piyano fontları -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
-
-  <meta name="description" content="Rock/piyano estetiğinde kişisel portfolyo: projeler, CV, iletişim." />
-  <meta name="theme-color" content="#000000" />
-  <meta property="og:title" content="Ad Soyad – Kişisel Site" />
-  <meta property="og:description" content="Modern, yüksek kontrastlı siyah-beyaz portfolyo." />
-  <meta property="og:type" content="website" />
-
-  <link rel="stylesheet" href="./styles.css" />
+  <title>Kişisel Site</title>
+  <link rel="stylesheet" href="./styles.css?v=7" />
+  <meta name="color-scheme" content="dark light">
 </head>
 <body>
-  <!-- NAVBAR -->
-  <header class="navbar">
-    <div class="container nav-row">
-      <a href="#home" class="brand">
-        <span class="brand-square"></span>
-        <span>Mert Topaçoğlu</span>
-      </a>
-      <nav class="nav-links" id="top-nav">
-        <a href="#contact" data-section="contact" class="link-underline">İletişim</a>
-        <a href="#cv" data-section="cv" class="link-underline">CV</a>
-        <a href="#hobbies" data-section="hobbies" class="link-underline">Hobiler</a>
-        <a href="https://github.com/kullanici" target="_blank" class="mono link-underline">GitHub</a>
-        <a href="https://www.linkedin.com/in/kullanici" target="_blank" class="mono link-underline">LinkedIn</a>
-      </nav>
-      <button id="theme-toggle" aria-label="Tema Değiştir">☾</button>
-    </div>
+  <!-- Arkaplan için tek tuval: hem çizgiler hem mouse izi -->
+  <canvas id="bgCanvas" aria-hidden="true"></canvas>
+
+  <header class="topbar">
+    <nav class="nav">
+      <a href="#home" class="brand">evencreed</a>
+      <ul class="links">
+        <li><a href="#cv">CV</a></li>
+        <li><a href="#hobbies">Hobiler</a></li>
+        <li><a href="#contact">İletişim</a></li>
+      </ul>
+      <button id="themeToggle" class="btn ghost" title="Tema Değiştir">🌗</button>
+    </nav>
   </header>
 
-  <!-- ANA İÇERİK -->
-  <main id="home" class="main">
-    <!-- Piyano arka plan -->
-    <div class="piano-bg" aria-hidden="true"></div>
-
-    <div class="container space">
-      <div class="intro">
-        <h1 class="display">Siyah & Beyaz • Net • Gür</h1>
-        <p>Bireysel Websitem</p>
+  <main class="container" id="home">
+    <!-- Hero kart -->
+    <section class="card hero">
+      <img class="avatar" src="./assets/me.jpg" alt="Fotoğrafım" onerror="this.style.display='none'">
+      <div>
+        <h1>Merhaba, ben <span class="accent">Mert</span> 👋</h1>
+        <p class="muted">Rock/piyano siyah-beyaz paletinde sade bir portföy. Aşağıdan CV’ye göz atabilir ve bana ulaşabilirsin.</p>
+        <div class="row">
+          <a class="btn primary" href="#cv">CV Gör</a>
+          <a class="btn" href="#contact">İletişim</a>
+        </div>
       </div>
+    </section>
 
-      <section class="grid-two">
-        <!-- FOTOĞRAF KARTI (altıgen kesim) -->
-        <div class="card photo-card">
-          <div class="photo-hex">
-            <img src="./assets/profile.jpeg" alt="Profil fotoğrafı"
-                 onerror="this.outerHTML='<div class=&quot;photo-fallback&quot;>🎸</div>'" />
-          </div>
-        </div>
+    <!-- CV -->
+    <section id="cv" class="card">
+      <h2>CV</h2>
+      <p>Özet: Frontend (HTML/CSS/JS), Backend (Node/Express/Prisma), SQL (Postgres).</p>
+      <ul class="bullets">
+        <li>JavaScript / Express / Prisma</li>
+        <li>Responsive UI, modern tasarım</li>
+        <li>DevOps: Vercel + Render + Supabase</li>
+      </ul>
+      <div class="row">
+        <a class="btn" href="./assets/cv.pdf" target="_blank" rel="noreferrer">PDF İndir</a>
+      </div>
+    </section>
 
-        <!-- TANIM KARTI -->
-        <div class="card text-card">
-          <div>
-            <h2 class="display-sm">Ad Soyad</h2>
-            <p class="subtitle">Full-Stack Geliştirici • İstanbul</p>
-            <p class="desc">
-              Minimal, hızlı ve erişilebilir arayüzler. Node.js & PostgreSQL ile güvenilir backend’ler.
-              Performans, erişilebilirlik ve temiz mimari önceliğim.
-            </p>
-          </div>
-          <div class="btn-row">
-            <a class="btn primary" href="#contact">İletişime Geç</a>
-            <!-- temaya göre ters renk -->
-            <button class="btn btn--cv" id="view-cv-btn" type="button">CV Gör</button>
-            <a class="btn" id="cv" href="./assets/CV.pdf" download>CV İndir</a>
-          </div>
-        </div>
-      </section>
+    <!-- Hobiler -->
+    <section id="hobbies" class="card">
+      <h2>Hobiler</h2>
+      <p>Müzik (piyano), rock dinlemek, fotoğrafçılık, minimal tasarım.</p>
+    </section>
 
-      <section id="hobbies" class="section">
-        <h3>Hobiler</h3>
-        <p>Müzik prodüksiyonu, koşu, tenis. (Detayları sonra dolduracağız.)</p>
-      </section>
+    <!-- İletişim -->
+    <section id="contact" class="card">
+      <h2>İletişim</h2>
+      <form id="contact-form" autocomplete="on">
+        <label for="name">Ad Soyad</label>
+        <input id="name" name="name" type="text" placeholder="Adınız" required />
 
-      <section id="contact" class="section">
-        <h3>İletişim</h3>
-        <form id="contact-form" class="form" novalidate>
-          <input name="name" placeholder="Ad Soyad" required />
-          <input name="email" type="email" placeholder="E-posta" required />
-          <textarea name="message" rows="5" placeholder="Mesaj" required></textarea>
+        <label for="email">E-posta</label>
+        <input id="email" name="email" type="email" placeholder="ornek@mail.com" required />
+
+        <label for="message">Mesaj</label>
+        <textarea id="message" name="message" rows="5" placeholder="Merhaba..." required></textarea>
+
+        <!-- Honeypot (botları yakalamak için görünmez alan) -->
+        <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true"/>
+
+        <div class="row">
           <button type="submit" class="btn primary">Gönder</button>
-          <p id="contact-status"></p>
-        </form>
-      </section>
-    </div>
+        </div>
+        <p id="contact-status" class="muted"></p>
+      </form>
+    </section>
   </main>
 
   <footer class="footer">
-    <div class="container">
-      <small>© <span id="year"></span> Ad Soyad</small>
-    </div>
+    <small>© <span id="year"></span> evencreed</small>
   </footer>
 
-  <!-- Toast -->
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-
-  <!-- CV Modal -->
-  <dialog id="cvModal" class="modal">
-    <div class="modal-body">
-      <button type="button" id="cvClose" class="btn close">✕</button>
-      <iframe src="./assets/CV.pdf" title="CV" class="modal-frame"></iframe>
-    </div>
-  </dialog>
-
-  <!-- Arkaplan canvas'lar -->
-  <canvas id="bg-lines" class="bg-canvas"></canvas>
-  <canvas id="cursor-trail" class="bg-canvas"></canvas>
-
-
+  <!-- API tabanı: JS'den ÖNCE set et -->
   <script>
-  // Şimdilik sabit tutalım ki undefined olmasın:
-  window.__API_BASE__ = "https://evencreed.onrender.com/api";
-</script>
-
-  <script src="./app.js"></script>
+    // PROD (Render)
+    window.__API_BASE__ = "https://evencreed.onrender.com/api";
+    // Lokal geliştirirken üst satırı yorumlayıp şunu aç:
+    // window.__API_BASE__ = "http://localhost:4000/api";
+  </script>
+  <script src="./app.js?v=7"></script>
 </body>
 </html>
