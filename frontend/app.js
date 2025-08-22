@@ -13,6 +13,19 @@ const topNav = document.getElementById("top-nav");
 
 yearEl.textContent = new Date().getFullYear();
 
+async function sendMessage({ name, email, message }) {
+  const res = await fetch(`${window.__API_BASE__}/messages`, {
+    method: 'POST',
+    headers: { 'Content-Type':'application/json' },
+    body: JSON.stringify({ name, email, message })
+  });
+  const text = await res.text();       // <- ÖNCE TEXT
+  if (!res.ok) throw new Error(`HTTP ${res.status} - ${text}`);
+  // JSON ise parse et
+  try { return JSON.parse(text); }
+  catch { throw new Error(`Non-JSON response: ${text.slice(0,200)}`); }
+}
+
 /* Tema */
 function isDark(){ return document.documentElement.classList.contains("dark"); }
 toggleBtn.addEventListener("click", ()=>{
