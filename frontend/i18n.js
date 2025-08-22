@@ -3,7 +3,6 @@
 (function(){
   const dict = {
     tr: {
-      'nav.brand':'evencreed',
       'nav.cv':'CV',
       'nav.hobbies':'Hobiler',
       'nav.contact':'İletişim',
@@ -38,7 +37,6 @@
       'status.error':'Mesaj gönderilemedi: {err}'
     },
     en: {
-      'nav.brand':'evencreed',
       'nav.cv':'Resume',
       'nav.hobbies':'Hobbies',
       'nav.contact':'Contact',
