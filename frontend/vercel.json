@@ -1,1 +1,9 @@
-
+{
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/cv", "destination": "/index.html#cv" },
+    { "source": "/hobbies", "destination": "/index.html#hobbies" },
+    { "source": "/contact", "destination": "/index.html#contact" },
+    { "source": "/admin", "destination": "/admin.html" }
+  ]
+}
