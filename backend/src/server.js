@@ -4,23 +4,30 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+
+// Firebase Admin SDK
+const admin = require('firebase-admin');
+
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.applicationDefault(),
+  });
+}
+const db = admin.firestore();
 
 const app = express();
 
-// ---------- CORS (preflight dahil, Vercel preview'ları da kapsar)
+// ---------- CORS
 const allowedFromEnv = (process.env.CORS_ORIGINS || '')
   .split(',')
   .map(s => s.trim())
   .filter(Boolean);
 
 function isAllowedOrigin(origin) {
-  if (!origin) return true; // curl/Postman vb.
+  if (!origin) return true; // curl/Postman
   try {
     const { hostname, protocol } = new URL(origin);
     if (allowedFromEnv.includes(origin)) return true;
-    // *.vercel.app (https) otomatik izin (istersen kaldırabilirsin)
     if (hostname.endsWith('.vercel.app') && protocol === 'https:') return true;
   } catch (_) {}
   return false;
@@ -42,34 +49,7 @@ app.get('/api/health', (_req, res) => {
   res.json({ ok: true, uptime: process.uptime() });
 });
 
-// ---------- Geçici DB teşhis ucu
-app.get('/api/db-check', async (_req, res) => {
-  const info = {};
-  try {
-    const u = new URL(process.env.DATABASE_URL);
-    info.dialect = u.protocol.replace(':', '');
-    info.host = u.hostname;
-    info.db = u.pathname.replace(/^\//, '');
-  } catch (e) {
-    info.parseError = e.message;
-  }
-
-  try {
-    // PostgreSQL denemesi
-    const pg = await prisma.$queryRaw`select current_user, current_database()`;
-    return res.json({ ok: true, engine: 'postgres', info, pg });
-  } catch (e1) {
-    try {
-      // SQLite denemesi
-      const s = await prisma.$queryRaw`select sqlite_version() as version`;
-      return res.json({ ok: true, engine: 'sqlite', info, s });
-    } catch (e2) {
-      return res.status(500).json({ ok: false, info, detail: e1.message });
-    }
-  }
-});
-
-// ---------- Auth: seed-admin (yalnızca ALLOW_SEED=true iken)
+// ---------- Auth: seed-admin (ALLOW_SEED=true iken)
 app.post('/api/auth/seed-admin', async (req, res, next) => {
   try {
     if (String(process.env.ALLOW_SEED).toLowerCase() !== 'true') {
@@ -78,14 +58,19 @@ app.post('/api/auth/seed-admin', async (req, res, next) => {
     const { email, password } = req.body || {};
     if (!email || !password) return res.status(400).json({ error: 'email & password required' });
 
-    const exists = await prisma.user.findUnique({ where: { email } });
-    if (exists) return res.json({ ok: true, message: 'Already exists' });
+    const snapshot = await db.collection('admins').where('email', '==', email).get();
+    if (!snapshot.empty) {
+      return res.json({ ok: true, message: 'Already exists' });
+    }
 
     const hash = await bcrypt.hash(password, 10);
-    const user = await prisma.user.create({
-      data: { email, password: hash },
+    const docRef = await db.collection('admins').add({
+      email,
+      password: hash,
+      createdAt: new Date()
     });
-    res.json({ ok: true, id: user.id, email: user.email });
+
+    res.json({ ok: true, id: docRef.id, email });
   } catch (err) {
     next(err);
   }
@@ -97,10 +82,11 @@ app.post('/api/auth/login', async (req, res, next) => {
     const { email, password } = req.body || {};
     if (!email || !password) return res.status(400).json({ error: 'email & password required' });
 
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return res.status(401).json({ error: 'Invalid credentials' });
+    const snapshot = await db.collection('admins').where('email', '==', email).get();
+    if (snapshot.empty) return res.status(401).json({ error: 'Invalid credentials' });
 
-    const ok = await bcrypt.compare(password, user.password);
+    const adminUser = snapshot.docs[0].data();
+    const ok = await bcrypt.compare(password, adminUser.password);
     if (!ok) return res.status(401).json({ error: 'Invalid credentials' });
 
     if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 16) {
@@ -108,7 +94,7 @@ app.post('/api/auth/login', async (req, res, next) => {
     }
 
     const token = jwt.sign(
-      { sub: user.id, email: user.email },
+      { email },
       process.env.JWT_SECRET,
       { algorithm: 'HS256', expiresIn: '7d' }
     );
@@ -139,10 +125,13 @@ app.post('/api/messages', async (req, res, next) => {
     if (!name || !email || !message) {
       return res.status(400).json({ error: 'Missing fields' });
     }
-    const saved = await prisma.message.create({
-      data: { name, email, body: message },
+    const docRef = await db.collection('messages').add({
+      name,
+      email,
+      body: message,
+      createdAt: new Date()
     });
-    res.json(saved);
+    res.json({ id: docRef.id, name, email, message });
   } catch (err) {
     next(err);
   }
@@ -151,10 +140,13 @@ app.post('/api/messages', async (req, res, next) => {
 // Admin: mesajları listeleme (korumalı)
 app.get('/api/messages', requireAuth, async (_req, res, next) => {
   try {
-    const rows = await prisma.message.findMany({
-      orderBy: { createdAt: 'desc' },
-      take: 50,
-    });
+    const snapshot = await db
+      .collection('messages')
+      .orderBy('createdAt', 'desc')
+      .limit(50)
+      .get();
+
+    const rows = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     res.json(rows);
   } catch (err) {
     next(err);
@@ -165,7 +157,7 @@ app.get('/api/messages', requireAuth, async (_req, res, next) => {
 app.get('/', (_req, res) => {
   res.type('html').send(`
     <h1>API çalışıyor ✅</h1>
-    <p><a href="/api/health">/api/health</a> · <a href="/api/db-check">/api/db-check</a></p>
+    <p><a href="/api/health">/api/health</a></p>
   `);
 });
 
