@@ -18,7 +18,8 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
-        run: npm install
+  run: npm install
+  working-directory: ./backend
 
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@v13.4.0
