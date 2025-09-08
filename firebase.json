@@ -1,5 +1,10 @@
 {
-  "functions": {
-    "source": "functions"
+  "hosting": {
+    "public": "frontend",   // build çıktılarının olduğu klasör
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
   }
 }
