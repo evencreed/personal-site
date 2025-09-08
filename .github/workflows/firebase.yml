@@ -22,9 +22,10 @@ jobs:
   working-directory: ./backend
 
       - name: Deploy to Firebase
-        uses: w9jds/firebase-action@v13.4.0
-        with:
-          args: deploy --only functions
-        env:
-          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+  uses: w9jds/firebase-action@v13.4.0
+  with:
+    args: deploy --only functions
+  env:
+    GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+    PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+  working-directory: ./backend
