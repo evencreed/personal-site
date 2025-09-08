@@ -96,30 +96,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
     document.getElementById('langSelect')?.addEventListener('change', (e)=>{
       window.i18n.set(e.target.value);
     });
-
-     // Temiz URL navigation
-  const links = document.querySelectorAll('a[href^="/"]');
-  links.forEach(link => {
-    link.addEventListener('click', (e) => {
-      const path = link.getAttribute('href');
-      const sectionId = path.replace('/', ''); // /cv → cv
-
-      const section = document.getElementById(sectionId);
-      if (section) {
-        e.preventDefault();
-        section.scrollIntoView({ behavior: 'smooth' });
-        history.pushState({}, '', path); // URL’i # olmadan değiştir
-      }
-    });
-  });
-
-  // Sayfa yüklendiğinde doğru yere kaydır
-  const path = window.location.pathname.replace('/', '');
-  if (path) {
-    const section = document.getElementById(path);
-    if (section) section.scrollIntoView({ behavior: 'smooth' });
-  }
-});
   }
 
   // İletişim formu
