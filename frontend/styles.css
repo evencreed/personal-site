@@ -194,7 +194,9 @@ textarea{ resize:vertical }
   display: flex;
   justify-content: center;
   gap: 20px;
-  margin: 30px 0;
+  margin: 30px auto;
+  width: 100%;
+  text-align: center;
 }
 
 .social-links a {
