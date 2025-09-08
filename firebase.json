@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "frontend",   // build çıktılarının olduğu klasör
+    "public": "frontend",
     "ignore": [
       "firebase.json",
       "**/.*",
