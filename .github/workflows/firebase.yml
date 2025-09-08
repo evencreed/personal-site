@@ -22,10 +22,10 @@ jobs:
         run: npm install
         working-directory: backend   # <-- senin package.json burada
 
-      - name: Deploy to Firebase
-        uses: w9jds/firebase-action@v13.4.0
-        with:
-          args: deploy --only functions
-        env:
-          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-          PROJECT_ID: evencreed-portfolio
+       - name: Deploy to Firebase
+         uses: w9jds/firebase-action@v13.4.0
+         with:
+         args: deploy --only functions --force
+         env:
+         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+         GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
