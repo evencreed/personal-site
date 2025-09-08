@@ -11,16 +11,16 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: '18'
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./backend   # <-- BURAYI kendi klasör ismine göre değiştir
+        working-directory: ./backend   # <- package.json klasörün
 
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@v13.4.0
@@ -29,4 +29,3 @@ jobs:
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-        working-directory: ./backend   # <-- BURAYI da aynı klasör ismiyle değiştir
