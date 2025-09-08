@@ -24,10 +24,17 @@ const allowedFromEnv = (process.env.CORS_ORIGINS || '')
   .filter(Boolean);
 
 function isAllowedOrigin(origin) {
-  if (!origin) return true; // curl/Postman
+  if (!origin) return true; // curl/Postman gibi
   try {
     const { hostname, protocol } = new URL(origin);
+
+    // Render domainine her zaman izin ver
+    if (hostname.endsWith('onrender.com')) return true;
+
+    // ENV’de izin verilenler
     if (allowedFromEnv.includes(origin)) return true;
+
+    // Vercel preview'larına izin
     if (hostname.endsWith('.vercel.app') && protocol === 'https:') return true;
   } catch (_) {}
   return false;
