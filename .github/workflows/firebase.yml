@@ -6,21 +6,21 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./backend   # <- package.json klasörün
+        working-directory: ./backend   # package.json hangi klasördeyse burayı güncelle
 
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@v13.4.0
@@ -28,4 +28,4 @@ jobs:
           args: deploy --only functions
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          PROJECT_ID: evencreed-portfolio
