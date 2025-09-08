@@ -20,10 +20,3 @@ jobs:
       - name: Install dependencies
         run: npm install
         working-directory: backend   # senin package.json burada
-
-      - name: Deploy to Firebase
-        uses: w9jds/firebase-action@v13.4.0
-        with:
-          args: deploy --only hosting --force
-        env:
-          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
