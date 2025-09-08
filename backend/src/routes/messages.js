@@ -1,31 +1,38 @@
-const { Router } = require("express");
-const { z } = require("zod");
+const express = require("express");
+const router = express.Router();
+const db = require("../firebase");
 
-const msgSchema = z.object({
-  name: z.string().min(1),
-  email: z.string().email(),
-  message: z.string().min(5)
+// Mesaj ekle
+router.post("/", async (req, res) => {
+  try {
+    const { name, email, message } = req.body;
+    const docRef = await db.collection("messages").add({
+      name,
+      email,
+      message,
+      createdAt: new Date()
+    });
+    res.json({ id: docRef.id });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error saving message");
+  }
 });
 
-module.exports = function messagesRouter(prisma) {
-  const r = Router();
+// Mesajları listele
+router.get("/", async (req, res) => {
+  try {
+    const snapshot = await db
+      .collection("messages")
+      .orderBy("createdAt", "desc")
+      .get();
 
-  // İletişim formundan kayıt
-  r.post("/", async (req, res, next) => {
-    try {
-      const { name, email, message } = msgSchema.parse(req.body);
-      const saved = await prisma.message.create({ data: { name, email, body: message } });
-      res.json({ ok: true, id: saved.id });
-    } catch (e) { next(e); }
-  });
+    const rows = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error fetching messages");
+  }
+});
 
-  // Admin görüntüleme (ileride auth ekleyebilirsin)
-  r.get("/", async (req, res, next) => {
-    try {
-      const list = await prisma.message.findMany({ orderBy: { createdAt: "desc" } });
-      res.json(list);
-    } catch (e) { next(e); }
-  });
-
-  return r;
-};
+module.exports = router;
