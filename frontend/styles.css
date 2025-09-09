@@ -232,6 +232,13 @@ textarea{ resize:vertical }
 .hero .social-links a[href*="pen"] {
   background: #111;
 }
+.social-links a[href*="github"] {
+  background: #333;   /* GitHub siyah */
+  color: #fff;        /* ikon beyaz */
+}
+.social-links a[href*="github"]:hover {
+  background: #000;   /* hover'da daha koyu siyah */
+}
 
 
 /* Footer */
