@@ -60,13 +60,11 @@
 
       // HERO
       'hero.title': 'Mert Topaçoğlu',
-      'hero.desc': `I’m Mert Topaçoğlu (Evencreed). Writing code is not just work for me—it’s a way to express creativity.
-On the frontend, I enjoy building modern, user-friendly interfaces with HTML, CSS, JavaScript, and React.
-On the backend, I develop robust and flexible apps using Node.js, Express, and Prisma.
-With Postgres, turning data into something organized and meaningful is a joy.
-I love learning new technologies; I continually improve myself in TypeScript, Next.js, and GraphQL.
-Deploying projects on platforms like Vercel, Render, and Supabase energizes me by bringing ideas to life quickly.
-In short, I value both order and originality—I see software as an art.`,
+      'hero.desc': `I’m Mert Topaçoğlu, also known as Evencreed. For me, coding is not just a job; it is also a way to express my creativity.
+
+On the frontend side, I enjoy building modern and user-friendly interfaces with HTML, CSS, JavaScript, and React. While bringing my projects to life, using platforms like Vercel, Render, and Supabase to quickly share my ideas with the world gives me energy.
+
+In short, I am someone who values both structure and originality, and sees software development as a form of art.`,
 
       // BUTTONS
       'btn.cv': 'View Resume',
