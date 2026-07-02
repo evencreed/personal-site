@@ -60,7 +60,7 @@
 
       // HERO
       'hero.title': 'Mert Topaçoğlu',
-      'hero.desc': `I’m Mert Topaçoğlu, also known as Evencreed. For me, coding is not just a job; it is also a way to express my creativity.
+      'hero.desc': `I’m Mert Topaçoğlu. For me, coding is not just a job; it is also a way to express my creativity.
 
 On the frontend side, I enjoy building modern and user-friendly interfaces with HTML, CSS, JavaScript, and React. While bringing my projects to life, using platforms like Vercel, Render, and Supabase to quickly share my ideas with the world gives me energy.
 
