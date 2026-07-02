@@ -14,13 +14,10 @@
       // HERO
       'hero.title': 'Mert Topaçoğlu',
       // Uzun paragraf: senin yazdığın metinle birebir
-      'hero.desc': `Ben Mert Topaçoğlu (Evencreed). Kod yazmak benim için sadece bir iş değil, aynı zamanda yaratıcılığımı ifade etmenin bir yolu.
-Frontend’de HTML, CSS, JavaScript ve React ile modern, kullanıcı dostu arayüzler kurmayı seviyorum. 
-Backend tarafında Node.js, Express ve Prisma ile güçlü ve esnek uygulamalar geliştiriyorum. 
-Postgres ile veriyi düzenli ve anlamlı hale getirmek benim için ayrı bir keyif.
-Yeni teknolojiler öğrenmekten hoşlanıyorum; özellikle TypeScript, Next.js ve GraphQL üzerinde kendimi sürekli geliştirmeye çalışıyorum. 
-Projelerimi hayata geçirirken Vercel, Render ve Supabase gibi platformlarla fikirlerimi hızla dünyaya açmak bana enerji veriyor. 
-Kısacası; hem düzeni hem de özgünlüğü önemseyen, yazılımı bir sanat gibi gören biriyim.`,
+      'hero.desc': `Ben Mert Topaçoğlu(Evencreed). Kod yazmak benim için sadece bir iş değil, aynı zamanda yaratıcılığımı ifade etmenin bir yolu.
+          Frontend’de HTML, CSS, JavaScript ve React ile modern, kullanıcı dostu arayüzler kurmayı seviyorum. 
+          Projelerimi hayata geçirirken Vercel, Render ve Supabase gibi platformlarla fikirlerimi hızla dünyaya açmak bana enerji veriyor. 
+          Kısacası; hem düzeni hem de özgünlüğü önemseyen, yazılımı bir sanat gibi gören biriyim.`,
 
       // BUTONLAR
       'btn.cv': 'CV Gör',
