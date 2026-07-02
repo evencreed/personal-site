@@ -34,9 +34,7 @@
 
       // HOBİLER
       'hobbies.title': 'Hobiler',
-      'hobbies.desc': `Aynı zamanda müzik prodüksiyonuyla uğraşıyorum; seslerle hikâye kurmayı ve duyguyu teknikle buluşturmayı seviyorum.
-Boş zamanlarımda dövme sanatıyla uğraşıyor, aksiyon sporlarının adrenaliniyle enerjimi tazeliyorum. 
-Satranç ise strateji ve odak tarafımı canlı tutuyor, dengemi sağlıyor.`,
+      'hobbies.desc': `Aynı zamanda müzik prodüksiyonuyla uğraşıyorum; Retropop ve Rock tarzı müzik üretiyorum.`,
 
       // İLETİŞİM
       'contact.title': 'İletişim',
